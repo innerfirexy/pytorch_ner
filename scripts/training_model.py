@@ -10,10 +10,10 @@ def train_model(model, optimizer, loss_function,
 
     def validate_model():
         with torch.no_grad():
-            inputs = torch.tensor(word_indexer.elements_to_index(val_words), dtype=torch.long)
-            true_vals = tag_indexer.elements_to_index(val_tags)
+            inputs = torch.tensor(word_indexer.elements_to_indices(val_words), dtype=torch.long)
+            true_vals = tag_indexer.elements_to_indices(val_tags)
             tag_scores = model(inputs)
-            prediction = get_tag_indexes_from_scores(tag_scores)
+            prediction = get_tag_indices_from_scores(tag_scores)
         validation_metrics.update(prediction, true_vals)
         validation_metrics.collect()
         for metric in validation_metrics.metrics_dict.keys():
@@ -35,8 +35,8 @@ def train_model(model, optimizer, loss_function,
         for sentence, tags in tqdm(batches):
             model.zero_grad()
 
-            sentence_in = torch.tensor(word_indexer.elements_to_index(sentence), dtype=torch.long)
-            targets = torch.tensor(tag_indexer.elements_to_index(tags), dtype=torch.long)
+            sentence_in = torch.tensor(word_indexer.elements_to_indices(sentence), dtype=torch.long)
+            targets = torch.tensor(tag_indexer.elements_to_indices(tags), dtype=torch.long)
 
             tag_scores = model(sentence_in)
 
@@ -44,7 +44,7 @@ def train_model(model, optimizer, loss_function,
             loss.backward()
             optimizer.step()
 
-            prediction = get_tag_indexes_from_scores(tag_scores.detach().numpy())
+            prediction = get_tag_indices_from_scores(tag_scores.detach().numpy())
             training_metrics.update(prediction, targets)
 
             running_loss += loss.item() * sentence_in.size(0)

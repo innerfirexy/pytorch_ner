@@ -6,12 +6,9 @@ class LSTMTagger(nn.Module):
     def __init__(self, embedding_dim, hidden_dim, tagset_size, embeddings_lambda):
         super(LSTMTagger, self).__init__()
         self.hidden_dim = hidden_dim
-
         self.word_embeddings = embeddings_lambda()
-
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim)
-
-        self.hidden2tag = nn.Linear(hidden_dim, tagset_size)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=2, dropout=0.5, bidirectional=True)
+        self.hidden2tag = nn.Linear(hidden_dim*2, tagset_size)
 
     def forward(self, sentence):
         embeds = self.word_embeddings(sentence)

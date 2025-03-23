@@ -17,10 +17,10 @@ class Indexer:
     def index_to_element(self, index):
         return self._index_to_element[index]
 
-    def elements_to_index(self, elements):
+    def elements_to_indices(self, elements):
         return [self.element_to_index(x) for x in elements]
 
-    def indexes_to_elements(self, indexes):
+    def indices_to_elements(self, indexes):
         return [self.index_to_element(x) for x in indexes]
 
     def size(self):

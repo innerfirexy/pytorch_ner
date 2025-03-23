@@ -1,3 +1,7 @@
+import numpy as np
+from tqdm import tqdm
+
+
 DOCSTART_LITERAL = '-DOCSTART-'
 
 
@@ -25,10 +29,7 @@ def get_batched(words, labels, size):
 
 
 def load_embedding_dict(vec_path):
-    from tqdm import tqdm
-    import numpy as np
     embeddings_index = dict()
-
     with open(vec_path, 'r', encoding='UTF-8') as file:
         for line in tqdm(file.readlines()):
             values = line.split()
@@ -39,8 +40,7 @@ def load_embedding_dict(vec_path):
     return embeddings_index
 
 
-def get_tag_indexes_from_scores(scores):
-    import numpy as np
+def get_tag_indices_from_scores(scores: np.ndarray):
     predicted = []
     for i in range(scores.shape[0]):
         predicted.append(int(np.argmax(scores[i])))
